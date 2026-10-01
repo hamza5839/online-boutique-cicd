@@ -34,8 +34,17 @@ jobs:
       - name: Build testing image
         run: docker build --target builder -t frontend:test app/frontend
 
-      - name: Run Go tests
-        run: docker run --rm frontend:test go test -v ./...
+      - name: Run Go tests and save report
+        shell: bash
+        run: docker run --rm frontend:test go test -v ./... 2>&1 | tee test-report.txt
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-test-report
+          path: test-report.txt
+          retention-days: 7
 
   build:
     needs: check
@@ -71,4 +80,3 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,scope=frontend,mode=max
-          
