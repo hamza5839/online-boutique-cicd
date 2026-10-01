@@ -11,13 +11,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Read workflow variable
-        run: echo "Checking $APP_NAME"
-
-      - name: Read step variable
+      - name: Show run information
         env:
-          CHECK_TYPE: unit-tests
-        run: echo "Running $CHECK_TYPE for $APP_NAME"
+          REPOSITORY: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          COMMIT: ${{ github.sha }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          echo "Repository: $REPOSITORY"
+          echo "Branch: $BRANCH"
+          echo "Commit: $COMMIT"
+          echo "Event: $EVENT"
 
   build:
     needs: check
@@ -26,3 +30,5 @@ jobs:
     steps:
       - name: Read workflow variable again
         run: echo "Building $APP_NAME"
+
+  
