@@ -38,13 +38,22 @@ jobs:
     needs: check
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Download repository
         uses: actions/checkout@v6
+        
+      - name: Log in to GHCR
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
       - name: Build application image
         run: docker build -t frontend:v1 app/frontend
 
       - name: Verify image exists
         run: docker image inspect frontend:v1
-        
