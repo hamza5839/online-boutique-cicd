@@ -45,15 +45,21 @@ jobs:
     steps:
       - name: Download repository
         uses: actions/checkout@v6
-        
+
+        env:
+          IMAGE_NAME: ghcr.io/hamza5839/online-boutique-cicd
+          IMAGE_TAG: ${{ github.sha }}
       - name: Log in to GHCR
         env:
+
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GHCR_USER: ${{ github.actor }}
         run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-
       - name: Build application image
-        run: docker build -t frontend:v1 app/frontend
+        run: docker build -t "$IMAGE_NAME:$IMAGE_TAG" app/frontend
 
       - name: Verify image exists
-        run: docker image inspect frontend:v1
+        run: docker image inspect "$IMAGE_NAME:$IMAGE_TAG"
+
+      - name: Push image to GHCR
+        run: docker push "$IMAGE_NAME:$IMAGE_TAG"
