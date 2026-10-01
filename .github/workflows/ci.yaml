@@ -9,6 +9,9 @@ on:
   workflow_dispatch:
 env:
   APP_NAME: frontend
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   check:
     runs-on: ubuntu-latest
