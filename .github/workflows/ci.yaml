@@ -22,7 +22,7 @@ jobs:
 
       - name: Inspect repository root
         run: pwd
-        
+
       - name: Practice a failure
         run: |
           echo "This step will fail intentionally"
@@ -30,3 +30,11 @@ jobs:
 
       - name: Next normal step
         run: echo "You will not see this message"
+        
+      - name: Report failure
+        if: failure()
+        run: echo "An earlier step failed"
+
+      - name: Final report
+        if: always()
+        run: echo "This runs after success or failure"
