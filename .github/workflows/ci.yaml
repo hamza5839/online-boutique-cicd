@@ -4,16 +4,21 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
   Nello:
     runs-on: ubuntu-latest
 
     steps:
-      - name: list files before checkout
-        run: ls -la
+      - name: Download repository
+        uses: actions/checkout@v6
 
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Inspect frontend
+        working-directory: app/frontend
+        run: |
+          pwd
+          ls -la
 
-      - name: list files after checkout
-        run: ls -la
+      - name: Inspect repository root
+        run: pwd
