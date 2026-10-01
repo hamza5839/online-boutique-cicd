@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download repository
+        uses: actions/checkout@v6
+        
       - name: Check required frontend files
         working-directory: app/frontend
         run: |
