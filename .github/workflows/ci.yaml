@@ -7,34 +7,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  Nello:
+  check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repository
-        uses: actions/checkout@v6
+      - name: Practice a check
+        run: echo "Checks passed"
 
-      - name: Inspect frontend
-        working-directory: app/frontend
-        run: |
-          pwd
-          ls -la
+  build:
+    needs: check
+    runs-on: ubuntu-latest
 
-      - name: Inspect repository root
-        run: pwd
-
-      - name: Practice a failure
-        run: |
-          echo "This step will fail intentionally"
-          exit 1
-
-      - name: Report failure
-        if: failure()
-        run: echo "An earlier step failed"
-
-      - name: Next normal step
-        run: echo "You will not see this message"
-        
-      - name: Final report
-        if: always()
-        run: echo "This runs after success or failure"
+    steps:
+      - name: Practice a build
+        run: echo "Building after checks passed"
