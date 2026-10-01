@@ -34,12 +34,17 @@ jobs:
       - name: Run Go tests
         run: docker run --rm frontend:test go test -v ./...
 
-  build:
+   build:
     needs: check
     runs-on: ubuntu-latest
 
     steps:
-      - name: Read workflow variable again
-        run: echo "Building $APP_NAME"
+      - name: Download repository
+        uses: actions/checkout@v6
 
+      - name: Build application image
+        run: docker build -t frontend:v1 app/frontend
+
+      - name: Verify image exists
+        run: docker image inspect frontend:v1
         
