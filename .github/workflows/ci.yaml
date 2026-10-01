@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
-
-      - name: Show latest commit
-        run: git log -1 --oneline
+      - name: Check required frontend files
+        working-directory: app/frontend
+        run: |
+          test -f Dockerfile
+          test -f go.mod
+          test -f go.sum
+          echo "All required files exist"
 
   build:
     needs: check
