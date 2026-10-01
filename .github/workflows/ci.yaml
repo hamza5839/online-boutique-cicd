@@ -8,5 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print a message
-        run: echo "Hello Hamza, CI is running!"
+      - name: list files before checkout
+        run: ls -la
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: list files after checkout
+        run: ls -la
