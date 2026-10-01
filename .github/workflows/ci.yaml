@@ -22,3 +22,11 @@ jobs:
 
       - name: Inspect repository root
         run: pwd
+        
+      - name: Practice a failure
+        run: |
+          echo "This step will fail intentionally"
+          exit 1
+
+      - name: Next normal step
+        run: echo "You will not see this message"
