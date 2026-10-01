@@ -41,14 +41,13 @@ jobs:
     permissions:
       contents: read
       packages: write
-
+    env:
+      IMAGE_NAME: ghcr.io/hamza5839/online-boutique-cicd
+      IMAGE_TAG: ${{ github.sha }}
     steps:
       - name: Download repository
         uses: actions/checkout@v6
 
-        env:
-          IMAGE_NAME: ghcr.io/hamza5839/online-boutique-cicd
-          IMAGE_TAG: ${{ github.sha }}
       - name: Log in to GHCR
         env:
 
