@@ -15,7 +15,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
       - name: Download repository
         uses: actions/checkout@v6
@@ -51,6 +51,7 @@ jobs:
 
   build:
     needs: check
+    timeout-minutes: 15
 
     if: github.event_name != 'pull_request'
 
@@ -66,6 +67,13 @@ jobs:
       - name: Download repository
         uses: actions/checkout@v6
 
+      - name: Calculate image tag
+        id: image
+        run: |
+          TAG=$(git rev-parse --short=12 HEAD)
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          
       - name: Log in to GHCR
         env:
 
@@ -80,6 +88,6 @@ jobs:
         with:
           context: app/frontend
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.image.outputs.tag }}
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,scope=frontend,mode=max
