@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Download repository
         uses: actions/checkout@v6
-        
+
       - name: Check required frontend files
         working-directory: app/frontend
         run: |
@@ -22,6 +22,18 @@ jobs:
           test -f go.sum
           echo "All required files exist"
 
+      - name: Check Dockerfile has a builder stage
+        working-directory: app/frontend
+        run: |
+          grep -q 'AS builder' Dockerfile
+          echo "Builder stage found"
+
+      - name: Build testing image
+        run: docker build --target builder -t frontend:test app/frontend
+
+      - name: Run Go tests
+        run: docker run --rm frontend:test go test -v ./...
+
   build:
     needs: check
     runs-on: ubuntu-latest
@@ -29,3 +41,5 @@ jobs:
     steps:
       - name: Read workflow variable again
         run: echo "Building $APP_NAME"
+
+        
