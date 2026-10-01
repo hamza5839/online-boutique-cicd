@@ -34,7 +34,7 @@ jobs:
       - name: Run Go tests
         run: docker run --rm frontend:test go test -v ./...
 
-   build:
+  build:
     needs: check
     runs-on: ubuntu-latest
 
