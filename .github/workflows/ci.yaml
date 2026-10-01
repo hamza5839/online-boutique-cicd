@@ -39,7 +39,7 @@ jobs:
 
   build:
     needs: check
-    
+
     if: github.event_name != 'pull_request'
 
     runs-on: ubuntu-latest
@@ -60,11 +60,15 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GHCR_USER: ${{ github.actor }}
         run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-      - name: Build application image
-        run: docker build -t "$IMAGE_NAME:$IMAGE_TAG" app/frontend
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-      - name: Verify image exists
-        run: docker image inspect "$IMAGE_NAME:$IMAGE_TAG"
-
-      - name: Push image to GHCR
-        run: docker push "$IMAGE_NAME:$IMAGE_TAG"
+      - name: Build and publish with cache
+        uses: docker/build-push-action@v7
+        with:
+          context: app/frontend
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend,mode=max
+          
