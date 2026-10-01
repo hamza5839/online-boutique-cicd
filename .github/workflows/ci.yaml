@@ -26,5 +26,3 @@ jobs:
     steps:
       - name: Read workflow variable again
         run: echo "Building $APP_NAME"
-
-  
