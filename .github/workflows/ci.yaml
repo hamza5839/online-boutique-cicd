@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 env:
   APP_NAME: frontend
@@ -36,6 +39,9 @@ jobs:
 
   build:
     needs: check
+    
+    if: github.event_name != 'pull_request'
+
     runs-on: ubuntu-latest
 
     permissions:
