@@ -1,23 +1,26 @@
-name: CI Basics First
-
+name: CI learnings
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-
 jobs:
   check:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Practice a check
-        run: echo "Checks passed"
+      - name: Read workflow variable
+        run: echo "Checking $APP_NAME"
+
+      - name: Read step variable
+        env:
+          CHECK_TYPE: unit-tests
+        run: echo "Running $CHECK_TYPE for $APP_NAME"
 
   build:
     needs: check
     runs-on: ubuntu-latest
 
     steps:
-      - name: Practice a build
-        run: echo "Building after checks passed"
+      - name: Read workflow variable again
+        run: echo "Building $APP_NAME"
