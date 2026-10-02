@@ -34,6 +34,14 @@ jobs:
           kubectl version --client
           kubectl kustomize k8s/overlays/dev > /tmp/boutique-dev.yaml
           test -s /tmp/boutique-dev.yaml
+      - name: Upload rendered development manifests
+        uses: actions/upload-artifact@v7
+        with:
+          name: boutique-dev-manifests
+          path: /tmp/boutique-dev.yaml
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Check required frontend files
         working-directory: app/frontend
         run: |
@@ -104,3 +112,4 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,scope=frontend,mode=max
+
