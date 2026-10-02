@@ -9,7 +9,7 @@ resources:
 
 replicas:
   - name: frontend
-    count: 1
+    count: 2
   - name: loadgenerator
     count: 0
 patches:
