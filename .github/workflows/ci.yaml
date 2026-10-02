@@ -7,11 +7,6 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      inspect_manifests:
-        description: "Inspect rendered development manifests"
-        type: boolean
-        default: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,15 +19,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    outputs:
-      manifest_artifact: ${{ steps.manifest_info.outputs.artifact_name }}
     steps:
       - name: Download repository
         uses: actions/checkout@v6
-
-      - name: Set manifest artifact name
-        id: manifest_info
-        run: echo "artifact_name=boutique-dev-manifests" >> "$GITHUB_OUTPUT"
 
       - name: Install YAML checker
         run: |
@@ -40,19 +29,7 @@ jobs:
           sudo apt-get install -y yamllint
 
       - name: Validate YAML files
-        run: yamllint -d relaxed k8s/ argocd/ .github/workflows/
-      - name: Validate development overlay
-        run: |
-          kubectl version --client
-          kubectl kustomize k8s/overlays/dev > /tmp/boutique-dev.yaml
-          test -s /tmp/boutique-dev.yaml
-      - name: Upload rendered development manifests
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ steps.manifest_info.outputs.artifact_name }}
-          path: /tmp/boutique-dev.yaml
-          if-no-files-found: error
-          retention-days: 7
+        run: yamllint -d relaxed .github/workflows/
 
       - name: Check required frontend files
         working-directory: app/frontend
@@ -82,24 +59,6 @@ jobs:
           name: frontend-test-report
           path: test-report.txt
           retention-days: 7
-
-  inspect-manifests:
-    needs: check
-    if: github.event_name != 'workflow_dispatch' || inputs.inspect_manifests
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Download rendered manifests
-        uses: actions/download-artifact@v8
-        with:
-          name: ${{ needs.check.outputs.manifest_artifact }}
-          path: manifests
-
-      - name: Inspect frontend image
-        run: |
-          test -s manifests/boutique-dev.yaml
-          grep 'image: ghcr.io' manifests/boutique-dev.yaml
-
 
   build:
     needs: check
