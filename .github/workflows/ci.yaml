@@ -1,6 +1,6 @@
-]name: CI learnings
+name: CI learnings
 on:
- ] push:
+  push:
     branches:
       - main
   pull_request:
