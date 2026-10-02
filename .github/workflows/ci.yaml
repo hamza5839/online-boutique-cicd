@@ -19,6 +19,14 @@ jobs:
       - name: Download repository
         uses: actions/checkout@v6
 
+      - name: Install YAML checker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+
+      - name: Validate YAML files
+        run: yamllint -d relaxed k8s/ argocd/ .github/workflows/
+
       - name: Check required frontend files
         working-directory: app/frontend
         run: |
