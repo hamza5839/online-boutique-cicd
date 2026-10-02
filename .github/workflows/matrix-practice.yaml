@@ -25,3 +25,20 @@ jobs:
           SERVICE: ${{ matrix.service }}
           TARGET_ENV: ${{ matrix.environment }}
         run: echo "Service=$SERVICE Environment=$TARGET_ENV"
+      - name: Simulate a failed test
+        env:
+          SERVICE: ${{ matrix.service }}
+          TARGET_ENV: ${{ matrix.environment }}
+        run: |
+          if [ "$SERVICE" = "frontend" ] && [ "$TARGET_ENV" = "staging" ]; then
+            echo "Deliberate failure for practice"
+            exit 1
+          fi
+
+      - name: Report failure
+        if: failure()
+        run: echo "A previous step failed in this job"
+
+      - name: Always report completion
+        if: always()
+        run: echo "Job finished, whether it passed or failed"
