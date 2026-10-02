@@ -18,9 +18,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      manifest_artifact: ${{ steps.manifest_info.outputs.artifact_name }}
     steps:
       - name: Download repository
         uses: actions/checkout@v6
+
+      - name: Set manifest artifact name
+        id: manifest_info
+        run: echo "artifact_name=boutique-dev-manifests" >> "$GITHUB_OUTPUT"
 
       - name: Install YAML checker
         run: |
@@ -37,7 +43,7 @@ jobs:
       - name: Upload rendered development manifests
         uses: actions/upload-artifact@v7
         with:
-          name: boutique-dev-manifests
+          name: ${{ steps.manifest_info.outputs.artifact_name }}
           path: /tmp/boutique-dev.yaml
           if-no-files-found: error
           retention-days: 7
@@ -70,6 +76,23 @@ jobs:
           name: frontend-test-report
           path: test-report.txt
           retention-days: 7
+
+  inspect-manifests:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download rendered manifests
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.check.outputs.manifest_artifact }}
+          path: manifests
+
+      - name: Inspect frontend image
+        run: |
+          test -s manifests/boutique-dev.yaml
+          grep 'image: ghcr.io' manifests/boutique-dev.yaml
+
 
   build:
     needs: check
