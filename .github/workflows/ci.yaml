@@ -1,12 +1,15 @@
-name: CI learnings
+]name: CI learnings
 on:
-  push:
+ ] push:
     branches:
       - main
   pull_request:
     branches:
       - main
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 env:
