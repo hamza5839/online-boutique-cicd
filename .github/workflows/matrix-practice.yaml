@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
+      fail-fast: false
+      max-parallel: 2
       matrix:
         service: [frontend, cartservice]
         environment: [dev, staging]
-
+        exclude:
+          - service: cartservice
+            environment: staging
     steps:
       - name: Show matrix combination
         env:
