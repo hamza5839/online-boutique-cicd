@@ -7,5 +7,4 @@ resources:
 images:
   - name: us-central1-docker.pkg.dev/online-boutique-ci/microservices-demo/frontend
     newName: ghcr.io/hamza5839/online-boutique-cicd
-    newTag: 6bde4bdf3fc4c24d69baf8e53148fec24fe0d660
-
+    newTag: 81dc467811c90d3ea0306a7337e690d608834681
