@@ -1,0 +1,23 @@
+name: Matrix practice
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  demonstrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        service: [frontend, cartservice]
+        environment: [dev, staging]
+
+    steps:
+      - name: Show matrix combination
+        env:
+          SERVICE: ${{ matrix.service }}
+          TARGET_ENV: ${{ matrix.environment }}
+        run: echo "Service=$SERVICE Environment=$TARGET_ENV"
