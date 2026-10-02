@@ -5,6 +5,9 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  syncPolicy:
+    automated:
+      enabled: true  
   source:
     repoURL: https://github.com/hamza5839/online-boutique-cicd.git
     targetRevision: main
