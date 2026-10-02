@@ -12,3 +12,5 @@ replicas:
     count: 1
   - name: loadgenerator
     count: 0
+patches:
+  - path: frontend-service-patch.yaml
