@@ -31,22 +31,9 @@ jobs:
       - name: Validate YAML files
         run: yamllint -d relaxed .github/workflows/
 
-      - name: Check required frontend files
-        working-directory: app/frontend
-        run: |
-          test -f Dockerfile
-          test -f go.mod
-          test -f go.sum
-          echo "All required files exist"
-
-      - name: Check Dockerfile has a builder stage
-        working-directory: app/frontend
-        run: |
-          grep -q 'AS builder' Dockerfile
-          echo "Builder stage found"
-
-      - name: Build testing image
-        run: docker build --target builder -t frontend:test app/frontend
+      - name: Check and test frontend
+        shell: bash
+        run: bash scripts/check-frontend.sh
 
       - name: Run Go tests and save report
         shell: bash
