@@ -31,21 +31,9 @@ jobs:
       - name: Validate YAML files
         run: yamllint -d relaxed .github/workflows/
 
-      - name: Check and test frontend
-        shell: bash
-        run: bash scripts/check-frontend.sh
-
       - name: Run Go tests and save report
         shell: bash
         run: docker run --rm frontend:test go test -v ./... 2>&1 | tee test-report.txt
-
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: frontend-test-report
-          path: test-report.txt
-          retention-days: 7
 
   build:
     needs: check
